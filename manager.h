@@ -6,8 +6,10 @@
 class manager {
 public:
   manager();
+  manager(std::list<allocation*> occupied, std::list<allocation*> free);
   void firstfit();
   void bestfit();
+  void setup();
 private:
   // basically simpler malloc()
   void * alloc(std::size_t chunk_size);

@@ -1,14 +1,8 @@
 #pragma once
 #include <iostream>
-
+// where space will have been allocated with sbrk() initially
 struct allocation {
   std::size_t size;
+  // the start of the program break. 
   void *space;
 };
-
-// class allocation {
-// public:
-//   allocation();
-//   std::size_t size;
-//   void *space;
-// };
