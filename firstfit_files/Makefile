@@ -1,11 +1,11 @@
 .default: all
 
-all: all
+all: firstfit
 
 clean:
 	rm -rf *.o *.dSYM
 
-first: main.o firstfit.o
+firstfit: main.o firstfit.o ../manager.o
 	g++ -Wall -Werror -std=c++20 -g -O -o ../$@ $^
 
 # rule for compiling .cpp files

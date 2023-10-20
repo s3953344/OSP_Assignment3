@@ -13,19 +13,19 @@
 
 .default: all
 
-all: first best
+all: firstfit bestfit
  
 clean:
 	rm -rf *.o *.dSYM;
-	cd firstfit && $(MAKE) clean;
-	cd bestfit && $(MAKE) clean;
+	cd firstfit_files && $(MAKE) clean;
+	cd bestfit_files && $(MAKE) clean;
 
 	rm -f firstfit;
 	rm -f bestfit;
 
 
-first: ./firstfit/main.o ./firstfit/firstfit.o
-	cd firstfit && $(MAKE)
+firstfit: ./firstfit_files/main.o ./firstfit_files/firstfit.o manager.o
+	cd firstfit_files && $(MAKE)
 
-best: ./bestfit/main.o ./firstfit/bestfit.o
-	cd bestfit && $(MAKE)
+bestfit: ./bestfit_files/main.o ./bestfit_files/bestfit.o manager.o
+	cd bestfit_files && $(MAKE)
