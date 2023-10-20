@@ -1,3 +1,7 @@
+# Specific build files to ignore
+firstfit
+bestfit
+
 # Prerequisites
 *.d
 
