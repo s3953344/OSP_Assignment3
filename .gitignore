@@ -1,6 +1,7 @@
 # Specific build files to ignore
 firstfit
 bestfit
+test
 
 # Prerequisites
 *.d

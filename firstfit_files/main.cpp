@@ -2,8 +2,7 @@
 #include "../manager.h"
 
 int main(int argc, char **argv) {
-  manager myManager = manager();
-  myManager.setup();
+  manager myManager = manager("first");
 
   
   return EXIT_SUCCESS;
