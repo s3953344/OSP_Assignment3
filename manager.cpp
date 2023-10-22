@@ -6,11 +6,40 @@
 #define SMALLEST_SIZE 32
 #define LARGEST_SIZE 512
 
+using std::cout;
+using std::endl;
+using std::string;
+
 // brk(void * addr);
 // This function sets the program break to be the value passed in by addr. If the setting of this values is 
 // successful, brk() will return 0. You will use this function at the end of your program to reset the heap 
 // frontier back to where it was at the start of your program, and it will free all memory you have 
 // allocated. 
+
+manager::~manager() {
+  reset();
+}
+
+void manager::printFree() {
+  for (auto chunk : free) {
+    cout << chunk->partitionSize << endl;
+    cout << chunk->size << endl;
+    cout << chunk->space << endl;
+    cout << "---------------" << endl;
+  }
+}
+
+void manager::printOccu() {
+  void* thing = initialProgramBreak;
+  for (allocation* chunk : occupied) {
+    cout << chunk->partitionSize << endl;
+    cout << chunk->size << endl;
+    cout << chunk->space << endl;
+    cout << std::size_t(chunk->space) - std::size_t(thing) << endl;
+    cout << "---------------" << endl;
+    thing = chunk->space;
+  }
+}
 
 manager::manager() { 
 }
@@ -92,27 +121,57 @@ void * manager::firstfit(std::size_t chunk_size) {
     }
   }
 
+  
+
   // if no chunk big enough found, use sbrk to grow heap
   // if (!fitFound) {
-    int partitionSize = smallestValidChunk(chunk_size);
-    void* ptr = sbrk(partitionSize);
-    allocation* newChunk = new allocation;
-    newChunk->size = chunk_size;
-    newChunk->space = ptr;
-    newChunk->partitionSize = partitionSize;
-    occupied.push_back(newChunk);
-    return newChunk->space;
+  return growHeap(chunk_size);
   // }
 
   // return nullptr;
 }
 
 void * manager::bestfit(std::size_t chunk_size) {
-  return nullptr;
+  bool fitFound = false;
+  allocation* best = free.front();
+  for (auto chunk : free) {
+    // find the smallest partition that fits the chunk to be allocated
+    if (chunk_size < chunk->partitionSize && chunk->partitionSize < best->partitionSize) {
+      fitFound = true;
+      best = chunk;
+      // free.remove(chunk);
+      // chunk->size = chunk_size;
+      // occupied.push_back(chunk);
+      // return chunk->space;
+    }
+  }
+
+  if (fitFound) {
+    free.remove(best);
+    best->size = chunk_size;
+    occupied.push_back(best);
+    return best->space;
+  } else {
+    return growHeap(chunk_size);
+  }
+  
+  // return nullptr;
+}
+
+void * manager::growHeap(std::size_t chunk_size) {
+  int partitionSize = smallestValidChunk(chunk_size);
+  void* ptr = sbrk(partitionSize);
+  allocation* newChunk = new allocation;
+  newChunk->size = chunk_size;
+  newChunk->space = ptr;
+  newChunk->partitionSize = partitionSize;
+  occupied.push_back(newChunk);
+  return newChunk->space;
 }
 
 void manager::reset() {
   if (!(brk(initialProgramBreak) == 0)) {
+    cout << "Reset failed. Could not reset heap frontier back to start to dealloc all used memory." << endl;
     exit(1);
   };
 }
