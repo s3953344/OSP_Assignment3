@@ -28,20 +28,20 @@ manager::~manager() {
 void manager::print(string list) {
   void* thing = initialProgramBreak;
   std::list<allocation*> list_p;
+  cout << endl << endl;
   if (list == "free") {
-    cout << "### FREE ###" << endl;
+    cout << "### FREE ###" << endl << endl;
     list_p = free;
   } else {
-    cout << "### OCCUPIED ###" << endl;
+    cout << "### OCCUPIED ###" << endl << endl;
     list_p = occupied;
   }
 
   for (allocation* chunk : list_p) {
-    cout << chunk->partitionSize << endl;
-    cout << chunk->size << endl;
-    cout << chunk->space << endl;
+    cout << "Address: " << chunk->space << endl;
+    cout << "Space used: " << chunk->size << endl;
+    cout <<  "Partition size: " << chunk->partitionSize << endl;
     cout << "---------------" << endl;
-    thing = chunk->space;
   }
 }
 
@@ -155,4 +155,29 @@ void * manager::getNextToDeallocate() {
   } else {
     return occupied.back()->space;
   }
+}
+
+void manager::printStats() {
+  // total space allocated
+  int total_pSpace = 0;
+  for (auto i : free) {
+    total_pSpace += i->partitionSize;
+  }
+  for (auto i : occupied) {
+    total_pSpace += i->partitionSize;
+  }
+
+  // total space used
+  int totalUsed = 0;
+  for (auto i : occupied) {
+    totalUsed += i->size;
+  }
+
+  // total space unused
+  int unused = total_pSpace - totalUsed;
+
+  cout << endl << endl << "===== STATS =====" << endl;
+  cout << "Total partition space: " << total_pSpace << endl;
+  cout << "Total space used: " << totalUsed << endl;
+  cout << "Total unused: " << unused << endl;
 }

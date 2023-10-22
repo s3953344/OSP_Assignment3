@@ -17,6 +17,8 @@ public:
   void print(std::string list);
   // in case there are two deallocate commands in a row, specify to remove in LIFO order
   void * getNextToDeallocate();
+  // output stats
+  void printStats();
 private:
   // either best or first
   std::string strategy;
@@ -29,7 +31,7 @@ private:
   // reset heap frontier to inital position and does memory clean up
   void reset();
 
-  
+
   std::list<allocation*> occupied;
   std::list<allocation*> free;
   void* initialProgramBreak;

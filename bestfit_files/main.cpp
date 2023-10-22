@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
   string cmd;
   void * lastAllocated = nullptr;
   while (getline(file, line)) {
-    cout << line << endl;
+    // cout << line << endl;
     // detect which command from the file
     cmd = line.substr(0, 5);
     if (cmd == "alloc") {
@@ -69,14 +69,10 @@ int main(int argc, char **argv) {
       exit(EXIT_FAILURE);
     }
   }
-
-  // myManager.alloc(28);
-  // myManager.alloc(288);
-  // void * thing = myManager.alloc(400);
-  // myManager.dealloc(thing);
   
   myManager.print("occu");
   myManager.print("free");
+  myManager.printStats();
   
   return EXIT_SUCCESS;
 }
