@@ -7,28 +7,29 @@ class manager {
 public:
   manager();
   ~manager();
+  // Pass in the strategy, either 'best' or 'first' at constructor
   manager(std::string strategy);
-  // manager(std::list<allocation*> occupied, std::list<allocation*> free);
-  // void setup();
+  // Allocate memory. calls either firstfit() or bestfit()
   void * alloc(std::size_t chunk_size);
+  // Deallocate memory
   void dealloc(void * chunk);
-  // void printFree();
-  // void printOccu();
+  // print information. pass in either 'free' or 'occu' to specify for which list
   void print(std::string list);
+  // in case there are two deallocate commands in a row, specify to remove in LIFO order
   void * getNextToDeallocate();
 private:
+  // either best or first
   std::string strategy;
-  // basically simpler malloc()
-  // dealloc does not return the chunk to OS. It simply makes the chunk free/available to new requests
-  // trying to dealloc memory that has not been allocated should terminate program (critical error)
   void * firstfit(std::size_t chunk_size);
   void * bestfit(std::size_t chunk_size);
-  // for when there are no valid free blocks
+  // for when there are no valid free blocks, use sbrk() to grow the heap
   void * growHeap(std::size_t chunk_size);
+  // calculate the smallest partition that fits a given chunk size
   int smallestValidChunk(int inputChunk);
+  // reset heap frontier to inital position and does memory clean up
   void reset();
 
-
+  
   std::list<allocation*> occupied;
   std::list<allocation*> free;
   void* initialProgramBreak;

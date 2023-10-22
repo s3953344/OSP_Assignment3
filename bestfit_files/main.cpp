@@ -11,9 +11,7 @@ using std::string;
 int main(int argc, char **argv) {
   bool isValid = true;
   string datafile;
-  std::ifstream file;
-
-  
+  std::ifstream file;  
 
   if (argc != 2) { 
     cout << "Incorrect number of args. Command args should be of form: " << endl;
@@ -64,7 +62,7 @@ int main(int argc, char **argv) {
       } 
       // if not failed, deallocate.
       myManager.dealloc(lastAllocated);
-      // if two deallocates in a row, follow FIFO order
+      // if two deallocates in a row, follow LIFO order
       lastAllocated = myManager.getNextToDeallocate();
     } else {
       cout << "Invalid command in data file. Should either be 'alloc' or 'dealloc'." << endl;
