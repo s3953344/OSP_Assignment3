@@ -15,6 +15,7 @@ public:
   // void printFree();
   // void printOccu();
   void print(std::string list);
+  void * getNextToDeallocate();
 private:
   std::string strategy;
   // basically simpler malloc()

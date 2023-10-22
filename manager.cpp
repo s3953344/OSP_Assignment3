@@ -221,3 +221,11 @@ int manager::smallestValidChunk(int inputChunk) {
   }
   return size;
 }
+
+void * manager::getNextToDeallocate() {
+  if (occupied.size() == 0) {
+    return nullptr;
+  } else {
+    return occupied.back()->space;
+  }
+}
