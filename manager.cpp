@@ -17,6 +17,12 @@ using std::string;
 // allocated. 
 
 manager::~manager() {
+  for (auto i : free) {
+    delete i;
+  }
+  for (auto i : occupied) {
+    delete i;
+  }
   reset();
 }
 
@@ -193,7 +199,7 @@ void * manager::bestfit(std::size_t chunk_size) {
 void * manager::growHeap(std::size_t chunk_size) {
   int partitionSize = smallestValidChunk(chunk_size);
   void* ptr = sbrk(partitionSize);
-  allocation* newChunk = new allocation;
+  allocation* newChunk = new allocation();
   newChunk->size = chunk_size;
   newChunk->space = ptr;
   newChunk->partitionSize = partitionSize;
