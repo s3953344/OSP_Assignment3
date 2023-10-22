@@ -105,9 +105,9 @@ void * manager::firstfit(std::size_t chunk_size) {
 void * manager::bestfit(std::size_t chunk_size) {
   bool fitFound = false;
   allocation* best = free.front();
-  for (auto chunk : free) {
+  for (allocation* chunk : free) {
     // find the smallest partition that fits the chunk to be allocated
-    if (chunk->partitionSize < best->partitionSize && chunk_size < chunk->partitionSize) {
+    if (chunk->size < best->partitionSize && chunk_size < chunk->partitionSize) {
       fitFound = true;
       best = chunk;
     }
