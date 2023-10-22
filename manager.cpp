@@ -27,21 +27,21 @@ manager::~manager() {
 
 void manager::print(string list) {
   void* thing = initialProgramBreak;
-  std::list<allocation*> list_p;
-  cout << endl << endl;
   if (list == "free") {
-    cout << "### FREE ###" << endl << endl;
-    list_p = free;
+    cout << endl << "######### FREE #########" << endl;
+    for (allocation* chunk : free) {
+      cout << "Address: " << chunk->space << endl;
+      cout <<  "Partition size: " << chunk->partitionSize << endl;
+      cout << "--------------------------" << endl;
+    }
   } else {
-    cout << "### OCCUPIED ###" << endl << endl;
-    list_p = occupied;
-  }
-
-  for (allocation* chunk : list_p) {
-    cout << "Address: " << chunk->space << endl;
-    cout << "Space used: " << chunk->size << endl;
-    cout <<  "Partition size: " << chunk->partitionSize << endl;
-    cout << "---------------" << endl;
+    cout << endl << "######### OCCUPIED #########" << endl;
+    for (allocation* chunk : occupied) {
+      cout << "Address: " << chunk->space << endl;
+      cout << "Space used: " << chunk->size << endl;
+      cout <<  "Partition size: " << chunk->partitionSize << endl;
+      cout << "--------------------------" << endl;
+    }
   }
 }
 
