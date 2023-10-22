@@ -12,8 +12,9 @@ public:
   // void setup();
   void * alloc(std::size_t chunk_size);
   void dealloc(void * chunk);
-  void printFree();
-  void printOccu();
+  // void printFree();
+  // void printOccu();
+  void print(std::string list);
 private:
   std::string strategy;
   // basically simpler malloc()

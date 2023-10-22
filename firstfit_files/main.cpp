@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
   myManager.alloc(28);
   myManager.alloc(288);
   myManager.alloc(400);
-  myManager.printOccu();
+  myManager.print("occ");
   
   return EXIT_SUCCESS;
 }

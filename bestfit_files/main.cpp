@@ -5,8 +5,13 @@ int main(int argc, char **argv) {
   manager myManager = manager("best");
   myManager.alloc(28);
   myManager.alloc(288);
-  myManager.alloc(400);
-  myManager.printOccu();
+  void * thing = myManager.alloc(400);
+  myManager.dealloc(thing);
+  
+  myManager.print("occu");
+
+
+  myManager.print("free");
   
   return EXIT_SUCCESS;
 }

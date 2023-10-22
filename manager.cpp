@@ -20,26 +20,47 @@ manager::~manager() {
   reset();
 }
 
-void manager::printFree() {
-  for (auto chunk : free) {
-    cout << chunk->partitionSize << endl;
-    cout << chunk->size << endl;
-    cout << chunk->space << endl;
-    cout << "---------------" << endl;
-  }
-}
-
-void manager::printOccu() {
+void manager::print(string list) {
   void* thing = initialProgramBreak;
-  for (allocation* chunk : occupied) {
+  std::list<allocation*> list_p;
+  if (list == "free") {
+    cout << "### FREE ###" << endl;
+    list_p = free;
+  } else {
+    cout << "### OCCUPIED ###" << endl;
+    list_p = occupied;
+  }
+
+  for (allocation* chunk : list_p) {
     cout << chunk->partitionSize << endl;
     cout << chunk->size << endl;
     cout << chunk->space << endl;
-    cout << std::size_t(chunk->space) - std::size_t(thing) << endl;
+    // cout << std::size_t(chunk->space) - std::size_t(thing) << endl;
     cout << "---------------" << endl;
     thing = chunk->space;
   }
 }
+
+// void manager::printFree() {
+//   for (auto chunk : free) {
+//     cout << chunk->partitionSize << endl;
+//     cout << chunk->size << endl;
+//     cout << chunk->space << endl;
+//     cout << "---------------" << endl;
+//   }
+// }
+
+// void manager::printOccu() {
+//   void* thing = initialProgramBreak;
+//   for (allocation* chunk : occupied) {
+//     cout << chunk->partitionSize << endl;
+//     cout << chunk->size << endl;
+//     cout << chunk->space << endl;
+//     cout << std::size_t(chunk->space) - std::size_t(thing) << endl;
+//     cout << "---------------" << endl;
+//     thing = chunk->space;
+//   }
+// }
 
 manager::manager() { 
 }
@@ -71,7 +92,21 @@ void * manager::alloc(std::size_t chunk_size) {
 }
 
 void manager::dealloc(void * chunk) {
+  for (auto i : occupied) {
+    if (i->space == chunk) {
+      // remove the pointer from occupied
+      occupied.remove(i);
+      // chunk is deallocated so 0 space is used.
+      i->size = 0;
+      free.push_back(i);
+      return;
+    }
+  }
 
+  // if reached this point, then pointer was not found
+  // meaning trying to deallocate memory that doesnt exist
+  cout << "FATAL ERROR: trying to deallocate memory that doesnt exist at location " << chunk << "." << endl;
+  exit(EXIT_FAILURE);
 }
 
 // void manager::setup() {
@@ -120,9 +155,6 @@ void * manager::firstfit(std::size_t chunk_size) {
       return chunk->space;
     }
   }
-
-  
-
   // if no chunk big enough found, use sbrk to grow heap
   // if (!fitFound) {
   return growHeap(chunk_size);
