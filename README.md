@@ -2,7 +2,7 @@ HOW TO RUN:
 
 A datafile of 100 allocations is provided and the a3_gen script is in here if you need.
 
-Simply do 
+In the root folder, simply do 
 - make all
 - ./firstfit datafile
 - ./bestfit datafile
