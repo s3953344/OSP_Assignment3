@@ -9,9 +9,9 @@ using std::cout;
 using std::endl;
 using std::string;
 
-clock_t start, end;
 
 int main(int argc, char **argv) {
+  clock_t start, end;
   bool isValid = true;
   string datafile;
   std::ifstream file;  
@@ -47,8 +47,8 @@ int main(int argc, char **argv) {
    * CONTRACT:
    * The datafile must be formatted correctly for this code to work
   */
-  string line;
-  string cmd;
+  string line = "";
+  string cmd = "";
   void * lastAllocated = nullptr;
   while (getline(file, line)) {
     // cout << line << endl;

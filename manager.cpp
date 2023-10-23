@@ -1,5 +1,6 @@
 #include "manager.h"
 #include <unistd.h>
+#include <string>
 #include <exception>
 
 // smallest chunk size as specified in assignment spec
@@ -50,6 +51,7 @@ manager::manager() { }
 manager::manager(std::string strategy) { 
   this->strategy = strategy;
   initialProgramBreak = sbrk(0);
+  totalFreeListAccesses = 0;
 }
 
 // This function will first look in the free list for a chunk big enough to meet the allocation request (based 
@@ -114,9 +116,6 @@ void * manager::bestfit(std::size_t chunk_size) {
   // search through free list for best fit
   for (allocation* chunk : free) {
     ++totalFreeListAccesses;
-    cout << chunk_size << endl;
-    cout << (chunk_size <= chunk->partitionSize) << endl;
-    cout << (chunk->partitionSize < best->partitionSize) << endl;
     // find the smallest partition that fits the chunk to be allocated
     if (chunk_size <= chunk->partitionSize && chunk->partitionSize < best->partitionSize) {
       fitFound = true;
@@ -126,6 +125,7 @@ void * manager::bestfit(std::size_t chunk_size) {
 
   // only allocate if a valid chunk in free list is found
   if (fitFound) {
+    // remove from free list and add to occupied
     free.remove(best);
     best->size = chunk_size;
     occupied.push_back(best);
@@ -186,12 +186,24 @@ void manager::printStats() {
     totalUsed += i->size;
   }
 
+  int totalFreeSpace = 0;
+  for (auto i : free) {
+    totalFreeSpace += i->partitionSize;
+  }
+  
+  int internalFrag = 0;
+  for (auto i : occupied) {
+    internalFrag += (i->partitionSize - i->size);
+  }
+
   // total space unused
-  int unused = total_pSpace - totalUsed;
+  // int unused = total_pSpace - totalUsed;
 
   cout << endl << endl << "===== STATS =====" << endl;
-  cout << "Total partition space: " << total_pSpace << endl;
-  cout << "Total space used: " << totalUsed << endl;
-  cout << "Total unused: " << unused << endl;
+  cout << "Total partition space: " << (total_pSpace) << endl;
+  // cout << "Total space used: " << totalUsed << endl;
+  cout << "Total free space: " << totalFreeSpace << endl;
+  cout << "Internal fragmentation: " << internalFrag << endl;
   cout << "Free list access count: " << totalFreeListAccesses << endl;
+  
 }

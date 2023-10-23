@@ -4,7 +4,7 @@
 #include "manager.h"
 
 /**
- * PURELY TESTING
+ * PURELY TESTING, YOU MAY IGNORE THIS FILE
 */
 
 using std::cout;
@@ -31,7 +31,13 @@ int main(void) {
   void* thing;
   manager myMan = manager("best");
   myMan.alloc(128);
+  thing = myMan.alloc(512);
+  myMan.dealloc(thing);
   thing = myMan.alloc(64);
+  
+  thing = myMan.alloc(512);
+  myMan.dealloc(thing);
+  thing = myMan.alloc(512);
   myMan.dealloc(thing);
   thing = myMan.alloc(512);
   myMan.dealloc(thing);

@@ -24,8 +24,8 @@ clean:
 	rm -f bestfit;
 
 
-firstfit: ./firstfit_files/main.o ./firstfit_files/firstfit.o manager.o
+firstfit: ./firstfit_files/main.o manager.o
 	cd firstfit_files && $(MAKE)
 
-bestfit: ./bestfit_files/main.o ./bestfit_files/bestfit.o manager.o
+bestfit: ./bestfit_files/main.o manager.o
 	cd bestfit_files && $(MAKE)
