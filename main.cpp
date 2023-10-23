@@ -28,12 +28,17 @@ int main(void) {
   // } else {
   //   return EXIT_FAILURE;
   // }
+  void* thing;
+  manager myMan = manager("best");
+  myMan.alloc(128);
+  thing = myMan.alloc(64);
+  myMan.dealloc(thing);
+  thing = myMan.alloc(512);
+  myMan.dealloc(thing);
+  myMan.alloc(32);
 
-  manager myMan = manager("first");
-  cout << myMan.alloc(28) << endl;
-  cout << myMan.alloc(67) << endl;
-  cout << myMan.alloc(288) << endl;
-
+  myMan.print("free");
+  myMan.print("occu");
 
   return EXIT_SUCCESS;
 }

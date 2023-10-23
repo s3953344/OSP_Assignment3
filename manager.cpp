@@ -26,12 +26,12 @@ manager::~manager() {
 }
 
 void manager::print(string list) {
-  void* thing = initialProgramBreak;
   if (list == "free") {
     cout << endl << "######### FREE #########" << endl;
     for (allocation* chunk : free) {
       cout << "Address: " << chunk->space << endl;
-      cout <<  "Partition size: " << chunk->partitionSize << endl;
+      cout << "Space used: " << chunk->size << endl;
+      cout << "Partition size: " << chunk->partitionSize << endl;
       cout << "--------------------------" << endl;
     }
   } else {
@@ -39,7 +39,7 @@ void manager::print(string list) {
     for (allocation* chunk : occupied) {
       cout << "Address: " << chunk->space << endl;
       cout << "Space used: " << chunk->size << endl;
-      cout <<  "Partition size: " << chunk->partitionSize << endl;
+      cout << "Partition size: " << chunk->partitionSize << endl;
       cout << "--------------------------" << endl;
     }
   }
@@ -89,8 +89,9 @@ void manager::dealloc(void * chunk) {
 // pointer to the memory chunk itself back to the caller that requested the memory allocation. 
 void * manager::firstfit(std::size_t chunk_size) {
   for (auto chunk : free) {
+    ++totalFreeListAccesses;
     // if chunk of right size found, remove from free and add to occupied
-    if (chunk_size < chunk->partitionSize) {
+    if (chunk_size <= chunk->partitionSize) {
       // fitFound = true;
       free.remove(chunk);
       chunk->size = chunk_size;
@@ -104,21 +105,33 @@ void * manager::firstfit(std::size_t chunk_size) {
 
 void * manager::bestfit(std::size_t chunk_size) {
   bool fitFound = false;
-  allocation* best = free.front();
+  // this odd bit of code means any valid chunk found in 'free' first will be replaced as best
+  // because it will always be better than the starting chunk with size LARGEST_SIZE + 1.
+  allocation starter;
+  starter.partitionSize = LARGEST_SIZE + 1;
+  allocation* best = &starter;
+
+  // search through free list for best fit
   for (allocation* chunk : free) {
+    ++totalFreeListAccesses;
+    cout << chunk_size << endl;
+    cout << (chunk_size <= chunk->partitionSize) << endl;
+    cout << (chunk->partitionSize < best->partitionSize) << endl;
     // find the smallest partition that fits the chunk to be allocated
-    if (chunk->size < best->partitionSize && chunk_size < chunk->partitionSize) {
+    if (chunk_size <= chunk->partitionSize && chunk->partitionSize < best->partitionSize) {
       fitFound = true;
       best = chunk;
     }
   }
 
+  // only allocate if a valid chunk in free list is found
   if (fitFound) {
     free.remove(best);
     best->size = chunk_size;
     occupied.push_back(best);
     return best->space;
   } else {
+    // or else, grow the heap and allocate more memory
     return growHeap(chunk_size);
   }
 }
@@ -180,4 +193,5 @@ void manager::printStats() {
   cout << "Total partition space: " << total_pSpace << endl;
   cout << "Total space used: " << totalUsed << endl;
   cout << "Total unused: " << unused << endl;
+  cout << "Free list access count: " << totalFreeListAccesses << endl;
 }

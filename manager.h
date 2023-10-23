@@ -30,7 +30,8 @@ private:
   int smallestValidChunk(int inputChunk);
   // reset heap frontier to inital position and does memory clean up
   void reset();
-
+  // the amount of times the allocation strategy needs to access the free list
+  int totalFreeListAccesses;
 
   std::list<allocation*> occupied;
   std::list<allocation*> free;

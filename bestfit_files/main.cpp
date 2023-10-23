@@ -1,12 +1,15 @@
 #include "../allocation.h"
 #include "../manager.h"
 #include <fstream>
+#include <time.h>
 
 #define DATAFILE 1
 
 using std::cout;
 using std::endl;
 using std::string;
+
+clock_t start, end;
 
 int main(int argc, char **argv) {
   bool isValid = true;
@@ -35,7 +38,8 @@ int main(int argc, char **argv) {
   }
 
   // If the program reaches this point, then we can run everything like normal
-
+  
+  start = clock();
   manager myManager = manager("best");
   // string datafile = argv[DATAFILE];
 
@@ -69,10 +73,17 @@ int main(int argc, char **argv) {
       exit(EXIT_FAILURE);
     }
   }
+
+  end = clock();
   
   myManager.print("occu");
   myManager.print("free");
   myManager.printStats();
+
+  // show timing
+  clock_t duration = end - start;
+  double seconds = (double)duration / (double)CLOCKS_PER_SEC;
+  cout << "Time spent: " << seconds * 1000 << "ms" << endl;
   
   return EXIT_SUCCESS;
 }
